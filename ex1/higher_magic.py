@@ -6,15 +6,11 @@ def spell_combiner(spell1: callable, spell2: callable) -> callable:
 
 
 def conditional_caster(condition: callable, spell: callable) -> callable:
-    count = 1
-
-    def cast() -> None:
-        nonlocal count
+    def cast(count) -> None:
         if condition(count) is True:
             spell(count)
         else:
             print("spell fizziled")
-            count += 1
     return cast
 
 
@@ -61,8 +57,8 @@ def spell_sequence(spells: list[callable]) -> callable:
 combiner = spell_combiner(hello, world)
 combiner()
 caster = conditional_caster(check, display)
-for i in range(3):
-    caster()
+caster(1)
+caster(3)
 
 megafireball = power_amplifier(fireball, 5)
 
