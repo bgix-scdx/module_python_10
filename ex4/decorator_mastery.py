@@ -17,9 +17,11 @@ def spell_timer(func: callable) -> callable:
 def power_validator(min_power: int) -> callable:
     def spell_func(func: callable) -> callable:
         @wraps(func)
-        def wraper(value: int) -> str:
-            if value < min_power:
+        def wraper(self: any = None, name: str = None,
+                   power: int = 0) -> str:
+            if power < min_power:
                 return "Insufficient power for this spell"
+            return func(self, name, power)
         return wraper
     return spell_func
 
@@ -46,8 +48,8 @@ def Fireball():
 
 
 @power_validator(10)
-def IceBeam(power) -> str:
-    return ("Icebeam of power:", power, "has been cast !")
+def Cast(self: any, name: str, power: int) -> str:
+    return f"{name} of power {power} has been cast !"
 
 
 @retry_spell(3)
@@ -68,9 +70,17 @@ class MageGuild:
         print(f"{name} was allowed in the guild.")
         return True
 
+    @power_validator(10)
+    def cast_spell(self, spell_name: str, power: int) -> str:
+        return f"Successfully cast {spell_name} with {power} power"
+
 
 print(MageGuild.validate_mage_name("Baka"))
 print(MageGuild.validate_mage_name("GeGe 7"))
 print(three_spell())
-print(IceBeam(15))
+print(Cast(name="Dust Devil", power=15))
+print()
 Fireball()
+mage = MageGuild()
+print(mage.cast_spell("Curse", 15))
+print(mage.cast_spell("Dart", 5))
