@@ -1,11 +1,12 @@
 from functools import reduce, partial, singledispatch, lru_cache
+from operator import mul, add
 
 
 def spell_reducer(spells: list[int], operation: str) -> int:
     if operation == "add":
-        return (reduce(lambda x, y: x + y, spells))
+        return (reduce(lambda x, y: add(x, y), spells))
     elif operation == "multiply":
-        return (reduce(lambda x, y: x * y, spells))
+        return (reduce(lambda x, y: mul(x, y), spells))
     elif operation == "max":
         return (max(spells))
     elif operation == "min":
